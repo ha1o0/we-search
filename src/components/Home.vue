@@ -16,7 +16,7 @@
       <button @click="reset">再猜一次</button>
     </div>
     <div v-show="currentPage < cardLength">
-      <Card :surnames="card"></Card>
+      <Card :surnames="card" :next-surnames="nextCard"></Card>
     </div>
   </div>
 </template>
@@ -36,6 +36,7 @@ import { onMounted } from "@vue/runtime-core"
 
   let result = ref(0)
   let card = ref([])
+  let nextCard = ref([])
   let currentPage = ref(0)
   const cards = []
   const cardLength = 7
@@ -60,15 +61,21 @@ import { onMounted } from "@vue/runtime-core"
   }
 
   card.value = cards[currentPage.value]
+  if (currentPage.value < cardLength - 1) {
+    nextCard.value = cards[currentPage.value + 1]
+  }
 
   const next = (value) => {
     result.value += value * Math.pow(2, currentPage.value)
     currentPage.value++
     card.value = cards[currentPage.value]
+    if (currentPage.value < cardLength - 1) {
+      nextCard.value = cards[currentPage.value + 1]
+    }
     if (currentPage.value === cardLength) {
       console.log('你姓【' + surnameList[result.value - 1] + '】')
     }
-    console.log(result.value, currentPage.value)
+    // console.log(result.value, currentPage.value)
   }
 
   const reset = () => {
