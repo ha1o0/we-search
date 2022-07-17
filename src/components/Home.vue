@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Hello 你姓什么？</h2>
+    <h2>Hello 贵姓？</h2>
     <h3>只需回答几个问题，我就能算出你姓什么</h3>
     <h3 v-show="currentPage < cardLength">告诉我以下是否有你的姓</h3>
     <div class="button-group" v-show="currentPage < cardLength">
@@ -70,23 +70,27 @@ import { onMounted } from "@vue/runtime-core"
   }
 
   const next = (value) => {
-
-    // cardRef.value.animation()
-    result.value += value * Math.pow(2, currentPage.value)
-    currentPage.value++
-    card.value = cards[currentPage.value]
     if (currentPage.value < cardLength - 1) {
-      nextCard.value = cards[currentPage.value + 1]
+      cardRef.value.animation()
     }
-    if (currentPage.value === cardLength) {
-      console.log('你姓【' + surnameList[result.value - 1] + '】')
-    }
+    setTimeout(() => {
+      result.value += value * Math.pow(2, currentPage.value)
+      currentPage.value++
+      card.value = cards[currentPage.value]
+      if (currentPage.value < cardLength - 1) {
+        nextCard.value = cards[currentPage.value + 1]
+      }
+      if (currentPage.value === cardLength) {
+        console.log('你姓【' + surnameList[result.value - 1] + '】')
+      }
+    }, 800);
     // console.log(result.value, currentPage.value)
   }
 
   const reset = () => {
     result.value = 0
     currentPage.value = 0
+    cardRef.value.reset()
     card.value = cards[currentPage.value]
   }
 

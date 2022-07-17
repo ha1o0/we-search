@@ -1,6 +1,5 @@
 <template>
-  <div class="card" ref="cardRef">
-    <!-- <button @click="isRotate = !isRotate">fan</button> -->
+  <div :class="['card']" ref="cardRef">
     <div class="row" v-for="(items, i) in surnameList" :key="i">
       <div class="item" v-for="(item, j) in items" :key="j">
         <div :class="['container', isRotate ? 'rotate' : '']">
@@ -14,7 +13,7 @@
 </template>
 
 <script setup>
-  import { watch, ref } from 'vue'
+  import { watch, ref, nextTick } from 'vue'
 
   const props = defineProps({
     surnames: {
@@ -31,8 +30,7 @@
     },
   })
 
-  let isRotate = ref(false)
-
+  let isRotate = ref(null)
   let surnameList = []
   let nextSurnameList = []
 
@@ -49,7 +47,13 @@
     return item.split('.')
   }
 
-  const update = async () => {
+  const animation = () => {
+    // isRotate = !isRotate
+    console.log('fannn')
+    isRotate.value = !isRotate.value
+  }
+
+  const update = () => {
     for (let i = 0; i < props.surnames.length; i++) {
       const row = parseInt(i / props.rows)
       const column = i % props.rows
@@ -57,23 +61,26 @@
         surnameList[row] = []
         nextSurnameList[row] = []
       }
-      surnameList[row][column] = props.surnames[i]
-      nextSurnameList[row][column] = props.nextSurnames[i]
+      if (isRotate.value === null) {
+        surnameList[row][column] = props.surnames[i]
+        nextSurnameList[row][column] = props.nextSurnames[i]
+      } else {
+        if (!isRotate.value) {
+          nextSurnameList[row][column] = props.nextSurnames[i]
+        } else {
+          surnameList[row][column] = props.nextSurnames[i]
+        }
+      }
     }
+  }
+
+  const reset = () => {
+    isRotate.value = null
   }
 
   update()
 
-  const animation = () => {
-    // isRotate = !isRotate
-    console.log('fannn')
-    setTimeout(() => {
-      isRotate = !isRotate
-    }, 1000);
-
-  }
-
-  defineExpose({ cardRef, animation })
+  defineExpose({ cardRef, animation, update, reset })
   // console.log(surnameList)
 
 </script>
@@ -102,6 +109,7 @@
       justify-content: center;
       align-items: center;
       user-select: none;
+
       .container {
         width: 100%;
         height: 100%;
@@ -123,6 +131,7 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          border-radius: 5px;
         }
         .front {
           // background: rgba(orange, 1);
@@ -131,10 +140,11 @@
           backface-visibility: hidden; // 关键属性
         }
         .back {
-          // background: #FF6666;
-          background: transparent;
-          color: transparent;
+          background: #FF6666;
+          // background: transparent;
+          // color: transparent;
           transform: rotateY(180deg);
+          backface-visibility: hidden; // 关键属性
         }
       }
       .rotate {
