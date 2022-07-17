@@ -1,6 +1,6 @@
 <template>
-  <div class="card">
-    <button @click="isRotate = !isRotate">fan</button>
+  <div class="card" ref="cardRef">
+    <!-- <button @click="isRotate = !isRotate">fan</button> -->
     <div class="row" v-for="(items, i) in surnameList" :key="i">
       <div class="item" v-for="(item, j) in items" :key="j">
         <div :class="['container', isRotate ? 'rotate' : '']">
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-  import { watch, defineProps, ref } from 'vue'
+  import { watch, ref } from 'vue'
 
   const props = defineProps({
     surnames: {
@@ -36,6 +36,8 @@
   let surnameList = []
   let nextSurnameList = []
 
+  const cardRef = ref(null)
+
   watch(
     () => props.surnames,
     (newValue, oldValue) => {
@@ -47,7 +49,7 @@
     return item.split('.')
   }
 
-  const update = () => {
+  const update = async () => {
     for (let i = 0; i < props.surnames.length; i++) {
       const row = parseInt(i / props.rows)
       const column = i % props.rows
@@ -58,14 +60,20 @@
       surnameList[row][column] = props.surnames[i]
       nextSurnameList[row][column] = props.nextSurnames[i]
     }
-    // isRotate = !isRotate
-    // setTimeout(() => {
-    //   isRotate = !isRotate
-    // }, 100);
   }
 
   update()
 
+  const animation = () => {
+    // isRotate = !isRotate
+    console.log('fannn')
+    setTimeout(() => {
+      isRotate = !isRotate
+    }, 1000);
+
+  }
+
+  defineExpose({ cardRef, animation })
   // console.log(surnameList)
 
 </script>
@@ -82,12 +90,13 @@
     margin-bottom: 0.5rem;
     .item {
       position: relative;
-      color: black;
+      color: white;
       // background: orange;
       margin-right: 0.5rem;
       // padding: 0.2rem;
-      width: 1.8rem;
-      height: 2.8rem;
+      width: 2rem;
+      height: 3rem;
+      font-size: large;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -116,12 +125,15 @@
           align-items: center;
         }
         .front {
-          background: rgba(orange, 1);
+          // background: rgba(orange, 1);
+          background: #005cffb5;
           position: absolute;
           backface-visibility: hidden; // 关键属性
         }
         .back {
-          background: #FF6666;
+          // background: #FF6666;
+          background: transparent;
+          color: transparent;
           transform: rotateY(180deg);
         }
       }

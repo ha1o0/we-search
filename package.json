@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "scp ./dist/index.html root@192.168.6.242:/root/roothome/docker/wwwroot/xing/ && scp -r ./dist/xing/assets/* root@192.168.6.242:/root/roothome/docker/wwwroot/xing/assets/",
     "preview": "vite preview"
   },
   "dependencies": {
