@@ -1,5 +1,13 @@
-import Home from './components/Home.vue'
+import Home from './pages/Home.vue'
+import Anim from './pages/Anim.vue'
 
 export const routes = [
-  { path: '/', component: Home },
+  {
+    path: '/',
+    component: Home,
+  },
+  {
+    path: '/anim',
+    component: Anim,
+  },
 ]
