@@ -25,17 +25,16 @@
 </template>
 
 <script setup>
-import Card from '../components/Card.vue';
+import Card from '@/components/Card.vue';
 import { ref } from 'vue'
 import { onMounted } from "@vue/runtime-core"
-import * as path from 'path';
 
   defineProps({
     msg: String
   })
 
   onMounted(() => {
-    console.log('mounted', path)
+    console.log('mounted')
   })
 
   let result = ref(0)
